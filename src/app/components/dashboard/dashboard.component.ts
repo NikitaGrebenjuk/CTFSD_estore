@@ -16,7 +16,7 @@ export class DashboardComponent implements OnInit {
   counter:number = 80;
   car: string = "  .-'--`-._<br>  '-O---O--'";
   backgroundFlag = false;
-  myInterval:any;
+  myInterval:any[]= [];
  
 
   constructor() {
@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
 
     let matching: NodeListOf<Element>  = document.querySelectorAll('[class*="g_row"]');
-    this.output1 = matching.length.toString() ;
+    this.output1 = matching.length.toString();
     let i =0;
     matching.forEach( (div_row) => {
       div_row.querySelectorAll('[class*="g_cell"]').forEach( (div_cell) => {
@@ -42,22 +42,29 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  startCars(): void {
-    const date = new Date();
-    this.output1 = date.toLocaleTimeString();
-    if(this.counter>83){
-      this.counter= this.counter%84;
+  async startCars(line:number,counter:number): Promise<void> {
+    counter = counter%12;
+    this.listOfDivs[(line*12)+counter].innerHTML = this.car;
+    if(!counter){
+      this.listOfDivs[(line*12)+11].innerHTML = ""; 
+    } else{
+      this.listOfDivs[(line*12)+counter-1].innerHTML = ""; 
     }
-    this.listOfDivs[this.counter].innerHTML = this.car;
-    this.listOfDivs[((this.counter == 0) ? 83:(this.counter-1) )].innerHTML = "";  
-    this.counter++;
+    counter++;
   }
 
   startButton():void {
-    this.myInterval = setInterval(()=> {this.startCars();}, 50);
-
+    let counter:number[] ;
+    counter= [0,0,0,0,0,0,0];
+    for (let c=counter.length; c>0; c--){
+      this.myInterval[c-1] = setInterval(()=> {
+        this.startCars(c-1,counter[c-1]);
+        counter[c-1]++;}, 60 + c*20);
+    }
   }
   stopButton():void {
-    clearInterval(this.myInterval);
+    for (let interval of this.myInterval){
+      clearInterval(interval);
+    }
   }
 }
