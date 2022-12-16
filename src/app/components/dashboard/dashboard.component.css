@@ -14,8 +14,8 @@
     line-height: 1;
     font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
     font-size: 0.8em;
-
+ 
 }
 .g_cell_background {
-    background-color: lightcoral;
+    background-color: grey;
 }
